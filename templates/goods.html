@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; padding-top:80px; justify-content: space-evenly">
+    <div>
+        <select class="form-select mb-2" id="order_by" aria-label="Floating label select example"
+                onChange="update_url()">
+            {% for ord in selectors['orders'] %}
+            <option>{{ ord }}</option>
+            {% endfor %}
+        </select>
+
+        <select class="form-select mb-2" id="manufacturer" aria-label="Floating label select example"
+                onChange="update_url()">
+            {% for man in selectors['manufacturers'] %}
+            <option>{{ man }}</option>
+            {% endfor %}
+        </select>
+
+        <select class="form-select" id="category" aria-label="Floating label select example"
+                onChange="update_url()">
+            {% for cat in selectors['categories'] %}
+            <option>{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="pe-4"
+         style="display: flex; flex-direction: column; justify-items: center;">
+        {% for good in goods %}
+        <div class="row border flex-md-row rounded overflow-hidden  mb-4 shadow-sm h-md-250 position-relative"
+        >
+            <div class=" p-4 d-flex flex-column position-static" style="width: 300px">
+                <h4 class="mb-0">{{ good.name }}</h4>
+                <strong class="d-inline-block mb-2 text-success">{{good.price}}₽</strong>
+                <div class="mb-1 text-muted">{{ good.category }}</div>
+                <p class="mb-auto text-truncate mb-2">{{ good.description }}</p>
+                <a href="{{ url_for('good_view', good_id=good.id) }}" class="btn btn-primary">Перейти</a>
+            </div>
+            <div class="col-auto" style="display: flex; align-items: center; justify-content: center">
+                <img src="{{ url_for('static', filename='photos/' + good.photo) }}" class="card-img-top"
+                     style="width: 300px">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function update_url() {
+        let manufacturer_sel = document.getElementById('manufacturer');
+        let category_sel = document.getElementById('category');
+        let order_sel = document.getElementById('order_by');
+
+        let manufacturer = manufacturer_sel.options[manufacturer_sel.selectedIndex].value;
+        let category = category_sel.options[category_sel.selectedIndex].value;
+        let order = order_sel.options[order_sel.selectedIndex].value;
+
+
+        console.log(manufacturer);
+
+        console.log(window.document.location);
+        window.document.location.search = '?manufacturer=' + manufacturer.replace(' ', '+') +
+            '&category=' + category.replace(' ', '+') +
+            '&order_by=' + order.replace(' ', '+');
+    }
+
+</script>
+{% endblock %}

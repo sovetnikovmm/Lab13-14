@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="center-screen" style="padding-top: 70px;">
+    <h1 style="margin-bottom: 2rem">{{ title }}</h1>
+    <div class="col-xxl-6 col-xl-7 col-lg-8 col-md-10 col-12">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form_floating(form.name) }}
+            {{ form_floating(form.description) }}
+            {{ form_floating(form.category) }}
+            {{ form_floating(form.manufacturer) }}
+            {{ form_floating(form.price) }}
+            <div class="" style="margin-bottom: 1rem">
+
+                {{ form.photo.label(class='form-label') }}
+                {{ form.photo(class='form-control', placeholder='placeholder') }}
+                {% for error in form.photo.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            {{ flashed_messages() }}
+            <button type="submit" class="btn btn-primary mb-4">Изменить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

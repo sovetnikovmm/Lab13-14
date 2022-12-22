@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <style>
+        .center-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+    </style>
+
+    {% if title %}
+    <title>Flask Shop | {{ title }}</title>
+    {% else %}
+    <title>Flask Shop</title>
+    {% endif %}
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+<header class="p-3 bg-white text-dark fixed-top">
+
+    {% macro form_floating(field, mb=1) %}
+    <div class="form-floating" style="margin-bottom: {{ mb }}rem">
+        {{ field(class='form-control', placeholder='placeholder') }}
+        {{ field.label }}
+        {% for error in field.errors %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+    {%- endmacro %}
+
+    {% macro flashed_messages() %}
+    {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+    <div class='alert alert-danger'>{{ message }}</div>
+    {% endfor %}
+    {% endwith %}
+    {%- endmacro %}
+
+    <div class="container">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="fs-5">
+                <a class="text-decoration-none text-dark" href="{{ url_for('index') }}">Онлайн-магазин</a>
+            </div>
+            {% if not current_user.is_authenticated %}
+            <div>
+                <a href="{{ url_for('login_view') }}" class="btn btn-secondary" style="margin-right: 1rem">Вход</a>
+                <a href="{{ url_for('register_view') }}" class="btn btn-warning">Регистрация</a>
+            </div>
+            {% else %}
+            <div style="display: flex; align-items: center; justify-content: space-between">
+                <div class="ms-4">
+                    {{ 'Администратор' if current_user.is_admin else 'Обычный пользователь' }}
+                </div>
+            </div>
+
+            <div>
+                {% if current_user.is_admin %}
+                <a href="{{ url_for('add_good_view') }}" class="btn btn-primary">Добавить Товар</a>
+                {% endif %}
+                <a href="{{ url_for('logout_view') }}" class="btn btn-danger">Выход</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<div class='container'>{% block content %}{% endblock %}</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
